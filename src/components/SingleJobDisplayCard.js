@@ -13,7 +13,7 @@ export default function SingleJobDisplayCard({ job }) {
       <Paper
         sx={{
           p: 2,
-          height: "350px",
+          height: "380px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
