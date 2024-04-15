@@ -11,6 +11,7 @@ export default function AppPagination({ setJobs }) {
     from: 0,
     to: pageSize,
   });
+
   useEffect(() => {
     service
       .fetchJobsInfo({ from: pagination.from, to: pagination.to })
@@ -19,6 +20,7 @@ export default function AppPagination({ setJobs }) {
         setJobs(response.data);
         console.log(response);
       });
+    //eslint-disable-next-line
   }, [pagination.from, pagination.to]);
 
   const handlePageChange = (event, page) => {
