@@ -9,11 +9,11 @@ export default function SingleJobDisplayCard({ job }) {
   const day = job.postedDate.slice(0, 10);
   const time = job.postedDate.slice(12, 20);
   return (
-    <Grid item sm={3}>
+    <Grid item xl={3} lg={4} md={6} xs={12}>
       <Paper
         sx={{
           p: 2,
-          height: "380px",
+          height: "280px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -42,7 +42,7 @@ export default function SingleJobDisplayCard({ job }) {
           ))}
 
           <Typography
-            noWrap={false}
+            noWrap={true}
             mt={2}
             sx={{ fontSize: "1rem" }}
             variant="subtitle2"

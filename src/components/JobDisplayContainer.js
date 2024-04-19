@@ -9,7 +9,7 @@ export default function JobDisplayContainer() {
   const [jobs, setJobs] = useState([]);
   return (
     <Container maxWidth="xl" sx={{ alignItems: "center" }}>
-      <Grid container spacing={3} sx={{ p: 2, color: "salmon" }}>
+      <Grid container spacing={3} sx={{ p: 7 }}>
         {/* <SingleJobDisplayCard></SingleJobDisplayCard>
         <SingleJobDisplayCard></SingleJobDisplayCard>
         <SingleJobDisplayCard></SingleJobDisplayCard>
