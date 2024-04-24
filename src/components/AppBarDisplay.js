@@ -6,7 +6,14 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Menu from "@mui/material/Menu";
-import { Link as RouterLink } from "react-router-dom";
+import {
+  Link as RouterLink,
+  useLoaderData,
+  useNavigate,
+  useSubmit,
+  useSearchParams,
+  redirect,
+} from "react-router-dom";
 import Link from "@mui/material/Link";
 
 import Typography from "@mui/material/Typography";
@@ -17,6 +24,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import SearchIcon from "@mui/icons-material/Search";
 import Switch from "@mui/material/Switch";
 import { useState } from "react";
+import AuthContext from "../auth/AuthContext";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -61,20 +69,38 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar() {
-  const [auth, setAuth] = useState(true);
-  const [anchorEl, setAnchorEl] = useState(null);
+  // const [auth, setAuth] = useState(true);
 
+  const { jobs, q } = useLoaderData();
+
+  const auth = React.useContext(AuthContext);
+  // const [anchorEl, setAnchorEl] = useState(null);
+
+  const navigate = useNavigate();
+  const submit = useSubmit();
+  const [searchParams, setSearchParams] = useSearchParams();
+  // const q = searchParams.get("q");
   const handleChange = (event) => {
-    setAuth(event.target.checked);
+    // setAuth(event.target.checked);
+
+    // setAuth(event.target.checked);
+    if (auth.user) {
+      auth.signOut(() => {
+        navigate("/");
+      });
+      return;
+    }
+    navigate("/login");
   };
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleMenu = (event) => {
+  //   console.log("e anchor", event);
+  //   setAnchorEl(event.currentTarget);
+  // };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
 
   return (
     <Box>
@@ -94,15 +120,26 @@ export default function SearchAppBar() {
               Job Search
             </Link>
           </Typography>
-          <Search sx={{ px: "2%", mr: "30px" }}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
+          <Box component="form">
+            <Search sx={{ pr: "2%", mr: "30px" }}>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+                name="q"
+                id="q"
+                type="search"
+                defaultValue={q}
+                onChange={(e) => {
+                  submit(e.currentTarget.form);
+                  console.log("e.currentTarget.form", e.currentTarget.form);
+                  setSearchParams({ q: e.currentTarget.value });
+                }}
+              />
+            </Search>
+          </Box>
           <Box flexGrow={3} />
           <Box>
             <FormGroup>
@@ -116,31 +153,31 @@ export default function SearchAppBar() {
                 }}
                 control={
                   <Switch
-                    checked={auth}
+                    checked={auth.user ? true : false}
                     onChange={handleChange}
                     aria-label="login switch"
                   />
                 }
-                label={auth ? "Logout" : "Login"}
+                label={auth.user ? "Logout" : "Login"}
               />
             </FormGroup>
           </Box>
           <Box>
-            {auth && (
+            {auth.user && (
               <div>
                 <IconButton
                   size="large"
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
-                  onClick={handleMenu}
+                  // onClick={handleMenu}
                   color="inherit"
                 >
                   <AccountCircle />
                 </IconButton>
                 <Menu
                   id="menu-appbar"
-                  anchorEl={anchorEl}
+                  // anchorEl={anchorEl}
                   anchorOrigin={{
                     vertical: "top",
                     horizontal: "right",
@@ -150,11 +187,11 @@ export default function SearchAppBar() {
                     vertical: "top",
                     horizontal: "right",
                   }}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
+                  // open={Boolean(anchorEl)}
+                  // onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  {/* <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={handleClose}>My account</MenuItem> */}
                 </Menu>
               </div>
             )}
